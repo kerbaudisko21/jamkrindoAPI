@@ -47,7 +47,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.PORT || 8800;
+const port = process.env.CYCLIC_URL || 8800;
 const server = http.createServer(app);
 
 app.listen(port, () => {
