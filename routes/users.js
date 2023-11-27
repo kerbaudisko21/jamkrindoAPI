@@ -17,7 +17,7 @@ router.get("/checkadmin/:id", verifyAdmin, (req,res,next)=>{
 })
 
 //UPDATE
-router.put("/:id", verifyUser,UpdateUser)
+router.put("/:id", UpdateUser)
 //DELETE
 router.delete("/:id",verifyUser, deleteUser)
 //GET

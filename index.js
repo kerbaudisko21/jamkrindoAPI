@@ -3,7 +3,9 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import authRoute from './routes/auth.js';
 import taskRoute from './routes/task.js';
+import userRoute from './routes/users.js';
 import cookieParser from "cookie-parser";
+import http from "http";
 
 mongoose.set('strictQuery', true);
 const app = express();
@@ -31,6 +33,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
 
 app.use((err, req, res, next) => {
@@ -44,8 +47,10 @@ app.use((err, req, res, next) => {
     });
 });
 
+const port = process.env.PORT || 8800;
+const server = http.createServer(app);
 
-app.listen(8800, () => {
+app.listen(port, () => {
     connect();
     console.log('Connected to backend!');
 });

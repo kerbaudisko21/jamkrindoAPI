@@ -4,6 +4,9 @@ const TaskSchema = new mongoose.Schema({
     colab: {
         type: Number,
     },
+    file: {
+        type: String,
+    },
     user_id:
     {
         type: mongoose.Schema.Types.ObjectId,
