@@ -50,9 +50,9 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.PORT || 8800;
+// const port = process.env.PORT || 8800;
 
-app.listen(port, () => {
+app.listen(8800, () => {
     connect();
-    console.log(`listening on ${port}`);
+    console.log(`listening on 8800`);
 });
