@@ -35,6 +35,9 @@ app.use(express.json());
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
+app.get('/', (req, res) => {
+    res.send('EXPRESS APP RESPONSE FINALLY')
+})
 
 app.use((err, req, res, next) => {
     const errStatus = err.status || 500;
