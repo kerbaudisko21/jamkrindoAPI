@@ -56,3 +56,5 @@ app.listen(8800, () => {
     connect();
     console.log(`listening on 8800`);
 });
+
+export default app;
