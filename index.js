@@ -5,7 +5,6 @@ import authRoute from './routes/auth.js';
 import taskRoute from './routes/task.js';
 import userRoute from './routes/users.js';
 import cookieParser from "cookie-parser";
-import http from "http";
 
 mongoose.set('strictQuery', true);
 const app = express();
@@ -47,10 +46,9 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.CYCLIC_URL || 8800;
-const server = http.createServer(app);
+const port = process.env.PORT || 8800;
 
-server.listen(port, () => {
+app.listen(port, () => {
     connect();
-    console.log('Connected to backend!');
+    console.log(`listening on ${port}`);
 });
