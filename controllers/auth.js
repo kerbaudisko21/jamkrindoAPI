@@ -37,7 +37,7 @@ export const login = async (req, res, next) => {
       httpOnly: true,
     });
     
-    res.status(200).json({ details: { ...otherDetails }, role, notHashPassword, password });
+    res.status(200).json({ details: { ...otherDetails }, role, notHashPassword, password});
   } catch (err) {
     next(err);
   }
