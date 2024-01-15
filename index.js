@@ -37,7 +37,29 @@ app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
 app.get('/home', (req, res) => {
-    res.send('EXPRESS APP RESPONSE FINALLY')
+    res.send('EXPRESS APP RESPONSE CIBAI')
+});
+
+app.post('/login', async(req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) return next(createError(404, 'User not found!'));
+        const notHashPassword = req.body.password;
+    
+        const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
+        if (!isPasswordCorrect) return next(createError(400, 'Wrong password or email!'));
+    
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT);
+    
+        const { password, role, ...otherDetails } = user._doc;
+        res.cookie('access_token', token, {
+          httpOnly: true,
+        });
+        
+        res.status(200).json({ details: { ...otherDetails }, role, notHashPassword, password });
+      } catch (err) {
+        next(err);
+      }
 });
 
 app.use((err, req, res, next) => {
