@@ -73,7 +73,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = CYCLIC_URL || 8800;
+const port = process.env.CYCLIC_URL || 8800;
 
 app.listen(port, () => {
     connect();
