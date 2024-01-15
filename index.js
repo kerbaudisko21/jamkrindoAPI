@@ -1,22 +1,16 @@
 import express from "express";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
+import dotenv from "dotenv"
+import mongoose from "mongoose"
 import authRoute from './routes/auth.js';
 import taskRoute from './routes/task.js';
 import userRoute from './routes/users.js';
 import cookieParser from "cookie-parser";
 import serverless from "serverless-http";
 
-// Load environment variables
+mongoose.set('strictQuery', true);
+const app = express();
 dotenv.config();
 
-// Create an Express application
-const app = express();
-
-// Configure mongoose to use strict queries
-mongoose.set('strictQuery', true);
-
-// Connect to MongoDB
 const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO);
@@ -27,30 +21,25 @@ const connect = async () => {
     }
 };
 
-// Event listeners for MongoDB connection status
 mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected');
+    console.log('mongo disconnected');
 });
 
 mongoose.connection.on('connected', () => {
-    console.log('MongoDB connected');
+    console.log('mongo connected');
 });
 
-// Middlewares
+//middlewares
 app.use(cookieParser());
 app.use(express.json());
 
-// Routes
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
-
-// Example route
 app.get('/home', (req, res) => {
-    res.send('EXPRESS APP RESPONSE');
+    res.send('EXPRESS APP RESPONSE FINALLY')
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
     const errStatus = err.status || 500;
     const errMessage = err.message || 'Something went wrong';
@@ -62,22 +51,11 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start the server after successful MongoDB connection
-const startServer = async () => {
-    try {
-        await connect();
-        const port = 8800;
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
-    } catch (error) {
-        console.error('Error starting server:', error);
-        process.exit(1); // Exit the process with an error code
-    }
-};
+// const port = process.env.PORT || 8800;
 
-// Call the startServer function
-startServer();
+app.listen(8800, () => {
+    connect();
+    console.log(`listening on 8800`);
+});
 
-// Export the serverless-wrapped application
 export default serverless(app);
