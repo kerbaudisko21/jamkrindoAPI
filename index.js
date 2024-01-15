@@ -1,16 +1,22 @@
 import express from "express";
-import dotenv from "dotenv"
-import mongoose from "mongoose"
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 import authRoute from './routes/auth.js';
 import taskRoute from './routes/task.js';
 import userRoute from './routes/users.js';
 import cookieParser from "cookie-parser";
 import serverless from "serverless-http";
 
-mongoose.set('strictQuery', true);
-const app = express();
+// Load environment variables
 dotenv.config();
 
+// Create an Express application
+const app = express();
+
+// Configure mongoose to use strict queries
+mongoose.set('strictQuery', true);
+
+// Connect to MongoDB
 const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO);
@@ -21,47 +27,30 @@ const connect = async () => {
     }
 };
 
+// Event listeners for MongoDB connection status
 mongoose.connection.on('disconnected', () => {
-    console.log('mongo disconnected');
+    console.log('MongoDB disconnected');
 });
 
 mongoose.connection.on('connected', () => {
-    console.log('mongo connected');
+    console.log('MongoDB connected');
 });
 
-//middlewares
+// Middlewares
 app.use(cookieParser());
 app.use(express.json());
 
+// Routes
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
+
+// Example route
 app.get('/home', (req, res) => {
-    res.send('EXPRESS APP RESPONSE cibai')
+    res.send('EXPRESS APP RESPONSE');
 });
 
-// app.post('/login', async (req, res) => {
-//     try {
-//         const user = await User.findOne({ email: req.body.email });
-//         if (!user) return next(createError(404, 'User not found!'));
-//         const notHashPassword = req.body.password;
-
-//         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
-//         if (!isPasswordCorrect) return next(createError(400, 'Wrong password or email!'));
-
-//         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT);
-
-//         const { password, role, ...otherDetails } = user._doc;
-//         res.cookie('access_token', token, {
-//             httpOnly: true,
-//         });
-
-//         res.status(200).json({ details: { ...otherDetails }, role, notHashPassword, password });
-//     } catch (err) {
-//         next(err);
-//     }
-// });
-
+// Error handling middleware
 app.use((err, req, res, next) => {
     const errStatus = err.status || 500;
     const errMessage = err.message || 'Something went wrong';
@@ -73,11 +62,22 @@ app.use((err, req, res, next) => {
     });
 });
 
-// const port = process.env.PORT || 8800;
+// Start the server after successful MongoDB connection
+const startServer = async () => {
+    try {
+        await connect();
+        const port = 8800;
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    } catch (error) {
+        console.error('Error starting server:', error);
+        process.exit(1); // Exit the process with an error code
+    }
+};
 
-app.listen(8800, () => {
-    connect();
-    console.log(`listening on 8800`);
-});
+// Call the startServer function
+startServer();
 
+// Export the serverless-wrapped application
 export default serverless(app);
