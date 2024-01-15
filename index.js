@@ -5,6 +5,7 @@ import authRoute from './routes/auth.js';
 import taskRoute from './routes/task.js';
 import userRoute from './routes/users.js';
 import cookieParser from "cookie-parser";
+import serverless from "serverless-http";
 
 mongoose.set('strictQuery', true);
 const app = express();
@@ -37,7 +38,7 @@ app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
 app.get('/home', (req, res) => {
     res.send('EXPRESS APP RESPONSE FINALLY')
-})
+});
 
 app.use((err, req, res, next) => {
     const errStatus = err.status || 500;
@@ -57,4 +58,4 @@ app.listen(8800, () => {
     console.log(`listening on 8800`);
 });
 
-export default app;
+export default serverless(app);
