@@ -73,9 +73,9 @@ app.use((err, req, res, next) => {
     });
 });
 
-// const port = process.env.CYCLIC_URL || 8800;
+const port = process.env.CYCLIC_URL || 8800;
 
-app.listen(8800, () => {
+app.listen(port, () => {
     connect();
     console.log(`listening on 8800`);
 });
