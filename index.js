@@ -37,7 +37,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/task', taskRoute);
 app.get('/home', (req, res) => {
-    res.send('EXPRESS APP RESPONSE FINALLY')
+    res.send('EXPRESS APP RESPONSE cibai')
 });
 
 app.post('/login', async (req, res) => {
